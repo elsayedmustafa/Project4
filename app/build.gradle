@@ -17,11 +17,28 @@ plugins {
 
 }
 
+File secretsFile = rootProject.file("secrets.properties")
+Properties secretsProperties = new Properties()
+
+if (secretsFile.exists()) {
+    secretsProperties.load(new FileInputStream(secretsFile))
+}
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
 //    buildToolsVersion "29.0.2"
 
     defaultConfig {
+
+        buildConfigField(
+                "String",
+                "GOOGLE_MAPS_API",
+                secretsProperties.getProperty(
+                        "GOOGLE_MAPS_API",
+                        System.getenv("GOOGLE_MAPS_API")
+                )
+        )
+
         multiDexEnabled = true
 
         applicationId "com.udacity.project4"
