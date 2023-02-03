@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 /secrets.properties
+
+/app/src/debug/res/values/google_maps_key.xml
