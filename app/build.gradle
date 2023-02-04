@@ -27,17 +27,23 @@ if (secretsFile.exists()) {
 android {
     compileSdkVersion rootProject.compileSdkVersion
 //    buildToolsVersion "29.0.2"
+//    resValue "String", "GOOGLE_MAPS_API", secretsProperties.getProperty("GOOGLE_MAPS_API")
+//    resValue "String", "GOOGLE_MAPS_API", "\"${secretsProperties.getProperty("GOOGLE_MAPS_API")}\""
 
     defaultConfig {
 
-        buildConfigField(
-                "String",
-                "GOOGLE_MAPS_API",
-                secretsProperties.getProperty(
-                        "GOOGLE_MAPS_API",
-                        System.getenv("GOOGLE_MAPS_API")
-                )
-        )
+
+
+//        resValue "String", "GOOGLE_MAPS_API", "\"${secretsProperties.getProperty("GOOGLE_MAPS_API")}\""
+
+//        buildConfigField(
+//                "String",
+//                "GOOGLE_MAPS_API",
+//                secretsProperties.getProperty(
+//                        "GOOGLE_MAPS_API",
+//                        System.getenv("GOOGLE_MAPS_API")
+//                )
+//        )
 
         multiDexEnabled = true
 
