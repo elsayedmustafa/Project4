@@ -10,17 +10,17 @@
         android:label="ReminderListFragment">
         <action
             android:id="@+id/to_login_reminder"
-            app:destination="@id/reminderLoginFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/reminderLoginFragment"
-        android:name="com.udacity.project4.locationreminders.loginreminderapp.LoginFragment"
-        android:label="ReminderListFragment">
-        <action
-            android:id="@+id/to_reminder_list"
             app:destination="@id/reminderListFragment" />
     </fragment>
+
+<!--    <fragment-->
+<!--        android:id="@+id/reminderLoginFragment"-->
+<!--        android:name="com.udacity.project4.locationreminders.loginreminderapp.LoginFragment"-->
+<!--        android:label="ReminderListFragment">-->
+<!--        <action-->
+<!--            android:id="@+id/to_reminder_list"-->
+<!--            app:destination="@id/reminderListFragment" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/reminderListFragment"
         android:name="com.udacity.project4.locationreminders.reminderslist.ReminderListFragment"

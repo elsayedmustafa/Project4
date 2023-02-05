@@ -1,8 +1,13 @@
 package com.udacity.project4.locationreminders.reminderslist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -72,6 +77,15 @@ class ReminderListFragment : BaseFragment() {
         when (item.itemId) {
             R.id.logout -> {
 //                TODO: add the logout implementation
+                AuthUI.getInstance()
+                    .signOut(requireContext())
+                    .addOnCompleteListener{
+
+//                            // user is now signed out
+//                            startActivity( Intent(MyActivity.this, SignInActivity.class));
+                            requireActivity().finishAffinity()
+                        
+                    }
             }
         }
         return super.onOptionsItemSelected(item)
