@@ -84,7 +84,7 @@ class ReminderListFragment : BaseFragment() {
 //                            // user is now signed out
 //                            startActivity( Intent(MyActivity.this, SignInActivity.class));
                             requireActivity().finishAffinity()
-                        
+
                     }
             }
         }
