@@ -67,8 +67,9 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope {
 //        Interaction to the repository has to be through a coroutine scope
             CoroutineScope(coroutineContext).launch(SupervisorJob()) {
 
+                triggeringGeofences!!.forEach {
                 //get the reminder with the request id
-                val result = remindersLocalRepository!!.getReminder(triggeringGeofences!!.get(0).requestId)
+                val result = remindersLocalRepository!!.getReminder(it.requestId)
                 if (result is Result.Success<ReminderDTO>) {
                     val reminderDTO = result.data
                     //send a notification to the user with the reminder details
@@ -84,6 +85,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope {
                     )
                     Log.i(TAG, reminderDTO.toString())
 
+                }
                 }
             }
 
