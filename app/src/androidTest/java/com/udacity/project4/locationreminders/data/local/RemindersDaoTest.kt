@@ -9,6 +9,7 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.util.FakeDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
@@ -67,5 +68,35 @@ class RemindersDaoTest {
         assertThat(result.latitude, `is`(reminderDTO.latitude))
     }
 
+    @Test
+    fun saveReminder_getReminders() = runBlocking {
+        // GIVEN - Save 15 movies.
+        val remindersList = FakeDataSource.getReminders()
+        remindersList.forEach {
+            remindersDao.saveReminder(it)
+        }
 
+        // WHEN - Get all saved movies.
+        val result = remindersDao.getReminders() //.getOrAwaitValue()
+
+        // THEN - Return all saved movies as they were.
+        assertThat(result.size, `is`(remindersList.size))
+        assertThat(result, CoreMatchers.hasItem(reminderDTO))
+    }
+
+    @Test
+    fun saveReminder_DeleteAllReminders() = runBlocking {
+        // GIVEN - Save 15 movies.
+        val remindersList = FakeDataSource.getReminders()
+        remindersList.forEach {
+            remindersDao.saveReminder(it)
+        }
+
+        // WHEN - Get all saved movies.
+        remindersDao.deleteAllReminders()
+        val result = remindersDao.getReminders() //.getOrAwaitValue()
+
+        // THEN - Return all saved movies as they were.
+        assertThat(result.size, `is`(0))
+    }
 }

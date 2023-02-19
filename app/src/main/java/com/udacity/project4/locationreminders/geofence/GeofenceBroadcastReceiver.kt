@@ -1,6 +1,5 @@
 package com.udacity.project4.locationreminders.geofence
 
-import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -69,7 +68,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope {
             CoroutineScope(coroutineContext).launch(SupervisorJob()) {
 
                 //get the reminder with the request id
-                val result = remindersLocalRepository!!.getReminder("requestId")
+                val result = remindersLocalRepository!!.getReminder(triggeringGeofences!!.get(0).requestId)
                 if (result is Result.Success<ReminderDTO>) {
                     val reminderDTO = result.data
                     //send a notification to the user with the reminder details

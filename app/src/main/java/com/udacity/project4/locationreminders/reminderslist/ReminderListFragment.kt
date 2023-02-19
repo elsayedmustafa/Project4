@@ -1,13 +1,10 @@
 package com.udacity.project4.locationreminders.reminderslist
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -67,10 +64,22 @@ class ReminderListFragment : BaseFragment() {
 
     private fun setupRecyclerView() {
         val adapter = RemindersListAdapter {
+            _viewModel.navigationCommand.postValue(NavigationCommand.To(
+                    ReminderListFragmentDirections.toDetailsReminder(it.id)));
+            Log.d("zzzzzzzzzzzz","setupRecyclerView")
         }
+
 
 //        setup the recycler view using the extension function
         binding.reminderssRecyclerView.setup(adapter)
+
+//        binding.reminderssRecyclerView.setOnClickListener {
+//            _viewModel.navigationCommand.postValue(
+//                NavigationCommand.To(
+//                    ReminderListFragmentDirections.toDetailsReminder(it.)
+//                )
+//            )
+//        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

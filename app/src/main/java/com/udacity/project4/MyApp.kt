@@ -4,6 +4,7 @@ import android.app.Application
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
+import com.udacity.project4.locationreminders.reminderdetails.ReminderDetailsViewModel
 import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.locationreminders.welcomreminderapp.WelcomeRemindersViewModel
@@ -37,6 +38,13 @@ class MyApp : Application() {
 //            }
             viewModel {
                 RemindersListViewModel(
+                    get(),
+                    get() as ReminderDataSource
+                )
+
+            }
+            viewModel {
+                ReminderDetailsViewModel(
                     get(),
                     get() as ReminderDataSource
                 )
