@@ -148,7 +148,7 @@ class ReminderListFragmentTest {
     }*/
 
     @Test
-    fun testNavigationToInGameScreen() {
+    fun testNavigationToReminderListScreen() {
         // Create a TestNavHostController
         val navController = TestNavHostController(
             ApplicationProvider.getApplicationContext())

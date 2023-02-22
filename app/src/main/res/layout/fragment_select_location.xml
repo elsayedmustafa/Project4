@@ -21,5 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
