@@ -148,7 +148,7 @@ class ReminderListFragmentTest {
     }*/
 
     @Test
-    fun testNavigationToReminderListScreen() {
+    fun testNavigationToReminderListScreen_ScrollTotestItem() {
         // Create a TestNavHostController
         val navController = TestNavHostController(
             ApplicationProvider.getApplicationContext())
@@ -170,139 +170,39 @@ class ReminderListFragmentTest {
         }
 
 
-//        // MasterFragment: Attempt to scroll to the movie with the name "Evil Dead".
+//        // MasterFragment: Attempt to scroll to the movie with the name "test".
         Espresso.onView(withId(R.id.reminderssRecyclerView)).perform(
             // scrollTo will fail the test if no item matches.
             RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                ViewMatchers.hasDescendant(ViewMatchers.withText("Evil Dead"))
+                ViewMatchers.hasDescendant(ViewMatchers.withText("test"))
             ),click()
         )
-    // MasterFragment: Attempt to scroll to the movie with the name "Evil Dead".
-//        Espresso.onView(withId(R.id.addReminderFAB)).perform(
-//            click()
-//        )
     }
 
-   /* @Test
-    fun launchReminderListFragment_scrollToMovie() {
-//        val scenario = ActivityScenario.launch(RemindersActivity::class.java)
-//        dataBindingIdlingResource.monitorActivity(scenario)
 
-//        val scenario = launchFragment<ReminderListFragment>()
-//        dataBindingIdlingResource.monitorFragment(scenario)
-//
-////        findNavController(ReminderListFragment::class.java).navigate(ShoeListingFragmentDirections.actionFragmentInstructionsOnboardingToFragmentShoeDetailFragment())
-//
-//
-//        NavigationCommand.To(
-//                ReminderListFragmentDirections.toSaveReminder()
-//            )
-//
-//        // MasterFragment: Attempt to scroll to the movie with the name "Evil Dead".
-//        Espresso.onView(withId(R.id.rv_movies)).perform(
-//            // scrollTo will fail the test if no item matches.
-//            RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-//                ViewMatchers.hasDescendant(ViewMatchers.withText("Evil Dead"))
-//            )
-//        )
+    @Test
+    fun GetReminderList_testGetError() {
+        // Create a TestNavHostController
+        val navController = TestNavHostController(
+            ApplicationProvider.getApplicationContext())
 
-        // Create a mock NavController
-//        val mockNavController = mock(NavController::class.java)
-//
-//        // Create a graphical FragmentScenario for the TitleScreen
-//        val titleScenario = launchFragmentInContainer<ReminderListFragment>()
-//
-//        // Set the NavController property on the fragment
-//        titleScenario.onFragment { fragment ->
-//            Navigation.setViewNavController(fragment.requireView(), mockNavController)
-//        }
+        // Create a graphical FragmentScenario for the TitleScreen
+        val titleScenario = launchFragmentInContainer<ReminderListFragment>( null, R.style.AppTheme)
 
-        val scenario = launchFragmentInContainer<ReminderListFragment>()
-        scenario.onFragment { fragment ->
-            fragment._viewModel.navigationCommand.postValue(
-                NavigationCommand.To(
-                    WelcomeReminderAppFragmentDirections.toLoginReminder()
-                )
-            )
+        dataBindingIdlingResource.monitorFragment(titleScenario as FragmentScenario<Fragment>)
+
+        titleScenario.onFragment { fragment ->
+
+//            dataBindingIdlingResource.monitorFragment(fragment)
+
+            // Set the graph on the TestNavHostController
+            navController.setGraph(R.navigation.nav_graph)
+
+            // Make the NavController available via the findNavController() APIs
+            Navigation.setViewNavController(fragment.requireView(), navController)
         }
-//        // Verify that performing a click prompts the correct Navigation action
-//        onView(ViewMatchers.withId(R.id.play_btn)).perform(ViewActions.click())
-//        verify(mockNavController).navigate(R.id.action_title_screen_to_in_game)
-    }*/
 
-//    @Test
-//    fun launchMainActivity_openMovieDetails_navigateBack() {
-//        val scenario = ActivityScenario.launch(MainActivity::class.java)
-//        dataBindingIdlingResource.monitorActivity(scenario)
-//
-//        // MasterFragment: Click on the movie "Evil Dead".
-//        Espresso.onView(withId(R.id.rv_movies)).perform(
-//            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-//                ViewMatchers.hasDescendant(ViewMatchers.withText("Evil Dead")),
-//                ViewActions.click()
-//            )
-//        )
-//
-//        // DetailFragment: Navigate back.
-//        Espresso.pressBack()
-//    }
-//
-//    @Test
-//    fun launchMainActivity_searchMovie_showNoResults() {
-//        val scenario = ActivityScenario.launch(MainActivity::class.java)
-//        dataBindingIdlingResource.monitorActivity(scenario)
-//
-//        // MasterFragment: Click on search menu item.
-//        Espresso.onView(withId(R.id.action_search)).perform(ViewActions.click())
-//
-//        // MasterFragment: Type "Godzilla: King of the Monsters" in the SearchView.
-//        Espresso.onView(withHint(R.string.hint_search_movie))
-//            .perform(ViewActions.typeText("Godzilla: King of the Monsters"))
-//
-//        // MasterFragment: Click on search button on the keyboard.
-//        Espresso.onView(withHint(R.string.hint_search_movie))
-//            .perform(ViewActions.pressImeActionButton())
-//
-//        // MasterFragment: Delay one second to allow for the debounce operation to perform the search.
-//        runBlocking { delay(1000) }
-//
-//        // MasterFragment: Verify that no search results are found.
-//        Espresso.onView(withId(R.id.iv_no_search_results))
-//            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//    }
-//
-//    @Test
-//    fun launchMainActivity_searchMovie_showResults() {
-//        val scenario = ActivityScenario.launch(MainActivity::class.java)
-//        dataBindingIdlingResource.monitorActivity(scenario)
-//
-//        // MasterFragment: Click on search menu item.
-//        Espresso.onView(withId(R.id.action_search)).perform(ViewActions.click())
-//
-//        // MasterFragment: Type "Godzilla" in the SearchView.
-//        Espresso.onView(withHint(R.string.hint_search_movie))
-//            .perform(ViewActions.typeText("Godzilla"))
-//
-//        // MasterFragment: Click on search button on the keyboard.
-//        Espresso.onView(withHint(R.string.hint_search_movie))
-//            .perform(ViewActions.pressImeActionButton())
-//
-//        // MasterFragment: Delay one second to allow for the debounce operation to perform the search.
-//        runBlocking { delay(1000) }
-//
-//        // MasterFragment: Verify that no search results layout is hidden.
-//        Espresso.onView(withId(R.id.iv_no_search_results))
-//            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
-//
-//        // MasterFragment: Click on the movie "Godzilla".
-//        Espresso.onView(withId(R.id.rv_movies)).perform(
-//            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-//                ViewMatchers.hasDescendant(ViewMatchers.withText("Godzilla")),
-//                ViewActions.click()
-//            )
-//        )
-//
-//        // DetailFragment: Navigate back.
-//        Espresso.pressBack()
-//    }
+
+
+    }
 }

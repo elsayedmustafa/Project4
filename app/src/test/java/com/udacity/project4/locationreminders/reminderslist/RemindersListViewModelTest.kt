@@ -11,8 +11,12 @@ import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import com.udacity.project4.locationreminders.utils.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.pauseDispatcher
+import kotlinx.coroutines.test.resumeDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,6 +45,10 @@ class RemindersListViewModelTest : KoinTest{
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
+    @After
+    fun stopKoinTTT(){
+        stopKoin()
+    }
     @Before
     fun init() {
         val testModule = module {
@@ -74,7 +82,7 @@ class RemindersListViewModelTest : KoinTest{
     }
 
     @Test
-    fun getAllReminders_RemindersExist() {
+    fun getAllReminders_RemindersExist()= mainCoroutineRule.runBlockingTest  {
         // GIVEN - Reminder repository.
 
         // WHEN - Get all Reminders.
@@ -85,6 +93,19 @@ class RemindersListViewModelTest : KoinTest{
         MatcherAssert.assertThat(result.isNullOrEmpty(), CoreMatchers.`is`(false))
     }
 
+    @Test
+    fun getAllReminders_TestLoading() = mainCoroutineRule.runBlockingTest {
+        // GIVEN - Reminder repository.
+        mainCoroutineRule.pauseDispatcher()
+
+        viewModelz.loadReminders()
+        MatcherAssert.assertThat(viewModelz.showLoading.getOrAwaitValue(), CoreMatchers.`is`(true))
+
+        mainCoroutineRule.resumeDispatcher()
+        MatcherAssert.assertThat(viewModelz.showLoading.getOrAwaitValue(), CoreMatchers.`is`(false))
+
+
+    }
 
 
 }
