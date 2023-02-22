@@ -6,11 +6,14 @@ import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.udacity.project4.R
@@ -117,6 +120,33 @@ class ReminderListFragmentTest {
 //    import androidx.test.core.app.ActivityScenario
 //    val scenario = ActivityScenario.launch(MainActivity::class.java)
 //    dataBindingIdlingResource.monitorActivity(scenario)
+
+
+    /*@Test
+    fun clickTask_navigateToDetailFragmentOne() = runBlockingTest {
+//        repository.saveTask(Task("TITLE1", "DESCRIPTION1", false, "id1"))
+//        repository.saveTask(Task("TITLE2", "DESCRIPTION2", true, "id2"))
+
+        // GIVEN - On the home screen
+        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
+
+        val navController = mock(NavController::class.java)
+
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
+        }
+        // WHEN - Click on the first list item
+        onView(withId(R.id.reminderssRecyclerView))
+            .perform(
+                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                hasDescendant(withText("TITLE1")), click()))
+
+        // THEN - Verify that we navigate to the first detail screen
+        verify(navController).navigate(
+            TasksFragmentDirections.actionTasksFragmentToTaskDetailFragment( "id1")
+        )
+    }*/
+
     @Test
     fun testNavigationToInGameScreen() {
         // Create a TestNavHostController
@@ -143,9 +173,9 @@ class ReminderListFragmentTest {
 //        // MasterFragment: Attempt to scroll to the movie with the name "Evil Dead".
         Espresso.onView(withId(R.id.reminderssRecyclerView)).perform(
             // scrollTo will fail the test if no item matches.
-//            RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-//                ViewMatchers.hasDescendant(ViewMatchers.withText("Evil Dead"))
-//            )
+            RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                ViewMatchers.hasDescendant(ViewMatchers.withText("Evil Dead"))
+            ),click()
         )
     // MasterFragment: Attempt to scroll to the movie with the name "Evil Dead".
 //        Espresso.onView(withId(R.id.addReminderFAB)).perform(
