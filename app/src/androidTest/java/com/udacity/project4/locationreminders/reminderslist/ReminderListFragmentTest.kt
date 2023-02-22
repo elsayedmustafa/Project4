@@ -36,16 +36,21 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
+import org.koin.test.KoinTest
+import org.koin.test.get
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
 //UI Testing
 @MediumTest
-class ReminderListFragmentTest {
+class ReminderListFragmentTest : KoinTest {
 
 //    TODO: test the navigation of the fragments.
 //    TODO: test the displayed data on the UI.
 //    TODO: add testing for the error messages.
+
+    private lateinit var viewModelz: RemindersListViewModel
+
 
     private lateinit var appContext: Application
 
@@ -100,6 +105,9 @@ class ReminderListFragmentTest {
                 )
             )
         }
+
+        viewModelz = get()
+
     }
 
     @Before
@@ -180,29 +188,5 @@ class ReminderListFragmentTest {
     }
 
 
-    @Test
-    fun GetReminderList_testGetError() {
-        // Create a TestNavHostController
-        val navController = TestNavHostController(
-            ApplicationProvider.getApplicationContext())
 
-        // Create a graphical FragmentScenario for the TitleScreen
-        val titleScenario = launchFragmentInContainer<ReminderListFragment>( null, R.style.AppTheme)
-
-        dataBindingIdlingResource.monitorFragment(titleScenario as FragmentScenario<Fragment>)
-
-        titleScenario.onFragment { fragment ->
-
-//            dataBindingIdlingResource.monitorFragment(fragment)
-
-            // Set the graph on the TestNavHostController
-            navController.setGraph(R.navigation.nav_graph)
-
-            // Make the NavController available via the findNavController() APIs
-            Navigation.setViewNavController(fragment.requireView(), navController)
-        }
-
-
-
-    }
 }
