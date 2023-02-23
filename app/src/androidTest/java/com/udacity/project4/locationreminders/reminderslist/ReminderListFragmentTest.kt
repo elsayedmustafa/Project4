@@ -188,5 +188,31 @@ class ReminderListFragmentTest : KoinTest {
     }
 
 
+    @Test
+    fun GetReminderList_testGetError() {
+        // Create a TestNavHostController
+        val navController = TestNavHostController(
+            ApplicationProvider.getApplicationContext())
 
+        // Create a graphical FragmentScenario for the TitleScreen
+        val titleScenario = launchFragmentInContainer<ReminderListFragment>( null, R.style.AppTheme)
+
+        dataBindingIdlingResource.monitorFragment(titleScenario as FragmentScenario<Fragment>)
+
+        titleScenario.onFragment { fragment ->
+
+//            dataBindingIdlingResource.monitorFragment(fragment)
+
+            // Set the graph on the TestNavHostController
+            navController.setGraph(R.navigation.nav_graph)
+
+            // Make the NavController available via the findNavController() APIs
+            Navigation.setViewNavController(fragment.requireView(), navController)
+        }
+
+        viewModelz.showErrorMessage.postValue("TTTTTTT")
+
+
+
+    }
 }
