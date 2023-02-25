@@ -62,8 +62,6 @@ class ReminderListFragmentTest : KoinTest {
 
     private val dataBindingIdlingResource = DataBindingIdlingResource()
 
-//    @get:Rule
-//    var instantExecutorRule = ActivityTestRule(RemindersActivityTest::class.java as Activity)
     /**
      * As we use Koin as a Service Locator library to develop the app, we'll also
      * use Koin to test the code. At this step we will initialize Koin related
@@ -177,11 +175,7 @@ class ReminderListFragmentTest : KoinTest {
         // Create a graphical FragmentScenario for the TitleScreen
         val titleScenario = launchFragmentInContainer<ReminderListFragment>( null, R.style.AppTheme)
 
-
-//        var activity: FragmentActivity? =null
         titleScenario.onFragment { fragment ->
-
-//            dataBindingIdlingResource.monitorFragment(fragment)
 
             // Set the graph on the TestNavHostController
             navController.setGraph(R.navigation.nav_graph)

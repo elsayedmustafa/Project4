@@ -55,10 +55,10 @@ class RemindersDaoTest {
 
     @Test
     fun saveReminder_getReminderById() = runBlocking {
-        // GIVEN - Save a movie.
+        // GIVEN - Save a Reminder.
         remindersDao.saveReminder(reminderDTO)
 
-        // WHEN - Get the movie by name from the database.
+        // WHEN - Get the Reminder by name from the database.
         val result = remindersDao.getReminderById(reminderDTO.id)
 
         // THEN - The loaded data contains the expected values.

@@ -40,8 +40,6 @@ class RemindersLocalRepositoryTest {
 
     @Before
     fun initDb() {
-//        MockitoAnnotations.initMocks(this)
-
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             RemindersDatabase::class.java
@@ -117,15 +115,13 @@ class RemindersLocalRepositoryTest {
     fun SaveReminders_GetError() = runBlocking {
         // GIVEN
         val reminder = FakeDataSource.getNoReminder()
-//            remindersDao.saveReminder(reminder!!)
 
         // WHEN - Get saved Reminder.
         var reminderResult = repository.getReminder("reminder.id")
 
-        var reminderFromResult=null //= ReminderDTO(null,null,null,null,null,"")
+        var reminderFromResult=null
         when(reminderResult){
             is Result.Success<*> -> {
-//                reminderFromResult = (reminderResult.data as ReminderDTO)
             }
             is Result.Error ->{
                 reminderFromResult = null

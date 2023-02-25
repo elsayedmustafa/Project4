@@ -37,7 +37,7 @@ import org.koin.android.ext.android.inject
 
 
 class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClickListener,
-    GoogleMap.OnMyLocationClickListener, OnMapReadyCallback {
+     OnMapReadyCallback {
 
     //Use Koin to get the view model of the SaveReminder
     override val _viewModel: SaveReminderViewModel by inject()
@@ -79,14 +79,8 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED  )-> {
                 // You can use the API that requires the permission.
-//                createLocationRequest()
+
                 getUserLocationOnMapAfterPermissionGranted()
-//                createLocationRequest()
-
-//                MapsClickListner()
-
-//                checkingGpsEnabled()
-
             }
             else -> {
                 // You can directly ask for the permission.
@@ -142,7 +136,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
                 ConfirmationDialog()
         }
 //        TODO: add the map setup implementation
-//        MapsClickListner()
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -150,123 +143,12 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
 //        TODO: zoom to the user location after taking his permission
         onRequestPermissionsResult()
 
-
-
 //        TODO: call this function after the user confirms on the selected location
-//        onLocationSelected()
 
         return binding.root
     }
 
-    /*@SuppressLint("MissingPermission")
-    private fun MapsClickListner() {
-        // Get a handle to the fragment and register the callback.
-        // Get a handle to the fragment and register the callback.
-        //        childFragmentManager
-        //            .findFragmentById(R.id.map).getMapAsync(this)
 
-        // Initialize map fragment
-        val supportMapFragment =
-            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-        // Async map
-        supportMapFragment!!.getMapAsync {
-            mMap = it
-
-
-            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-
-
-            mMap.setOnMyLocationButtonClickListener(this);
-            mMap.setOnMyLocationClickListener(this);
-
-    //            if ()mMap.isMyLocationEnabled
-            /* mMap.clear() //clear old markers
-
-            val googlePlex = CameraPosition.builder()
-                .target(LatLng(37.4219999, -122.0862462))
-                .zoom(10f)
-                .bearing(0f)
-                .tilt(45f)
-                .build()
-
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null)
-
-            mMap.addMarker(
-                MarkerOptions()
-                    .position(LatLng(0.0, 0.0))
-                    .title("Marker")
-                    .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.ic_location))
-
-            )*/
-            // When map is loaded
-            mMap.setOnMapClickListener { latLng -> // When clicked on map
-                // Initialize marker options
-                val markerOptions = MarkerOptions().icon(
-                    bitmapDescriptorFromVector(
-                        requireContext(),
-                        R.drawable.ic_location
-                    )
-                )
-
-                mMap.clear() //clear old markers
-
-                val googlePlex = CameraPosition.builder()
-                    .target(latLng)
-                    .zoom(10f)
-                    .bearing(0f)
-                    .tilt(45f)
-                    .build()
-
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null)
-
-
-                // Set position of marker
-                markerOptions.position(latLng)
-                // Set title of marker
-                markerOptions.title(latLng.latitude.toString() + " : " + latLng.longitude)
-                // Remove all marker
-    //                mMap.clear()
-                // Animating to zoom the marker
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
-                // Add marker on map
-                mMap.addMarker(markerOptions)
-
-                ConfirmationDialog(latLng.latitude, latLng.longitude)
-            }
-        }
-        // Return view
-
-        /*val mapFragment =
-            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
-        mapFragment!!.getMapAsync { //mMap ->
-            mMap=it
-            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-
-            mMap.clear() //clear old markers
-
-            val googlePlex = CameraPosition.builder()
-                .target(LatLng(37.4219999, -122.0862462))
-                .zoom(10f)
-                .bearing(0f)
-                .tilt(45f)
-                .build()
-
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null)
-
-            mMap.addMarker(
-                MarkerOptions()
-                    .position(LatLng(0.0, 0.0))
-                    .title("Marker")
-                    .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.ic_location))
-
-            )*/
-
-
-        //        }
-    }*/
     @SuppressLint("MissingPermission")
     fun getUserLocationOnMapAfterPermissionGranted(){
 
@@ -279,15 +161,7 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
                     zoomToUserLocation()
                 }
             }
-//        fusedLocationClient.lastLocation
-//            .addOnSuccessListener { location: Location? ->
-//                // Got last known location. In some rare situations this can be null.
-//                location?.let {
-//                    latitude = it.latitude
-//                    longitude = it.longitude
-//                    zoomToUserLocation()
-//                }
-//            }
+
     }
 
     private fun zoomToUserLocation() {
@@ -299,8 +173,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
         //        TODO: When the user confirms on the selected location,
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
-
-
         _viewModel.navigationCommand.value =
             NavigationCommand.Back
 
@@ -310,7 +182,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Confirmation")
         builder.setMessage("Are you sure that this location is what you need it?")
-//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
         builder.setPositiveButton(android.R.string.yes) { dialog, which ->
             Toast.makeText(requireContext(),
@@ -327,10 +198,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
                 android.R.string.no, Toast.LENGTH_SHORT).show()
         }
 
-//        builder.setNeutralButton("Maybe") { dialog, which ->
-//            Toast.makeText(requireContext(),
-//                "Maybe", Toast.LENGTH_SHORT).show()
-//        }
         builder.show()
 
     }
@@ -361,17 +228,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
 
     }
 
-    // Get a handle to the GoogleMap object and display marker.
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        googleMap.addMarker(
-//            MarkerOptions()
-//                .position(LatLng(0.0, 0.0))
-//                .title("Marker")
-//                .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.ic_location))
-//
-//        )
-//    }
-
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
         val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
         vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
@@ -390,53 +246,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION))
     }
-
-
-
-    /*fun createLocationRequest() {
-       /* val locationRequest = LocationRequest.create()?.apply {
-            interval = 10000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-        val builder = LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest!!)
-
-
-        val client: SettingsClient = LocationServices.getSettingsClient(requireActivity())
-        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-
-
-        task.addOnSuccessListener { locationSettingsResponse ->
-            // All location settings are satisfied. The client can initialize
-            // location requests here.
-            // ...
-//            locationSettingsResponse.locationSettingsStates.
-
- //        TODO: add style to the map
-//        TODO: put a marker to location that the user selected
-
-//            MapsClickListner()
-            getUserLocationOnMapAfterPermissionGranted()
-        }
-
-        task.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException){
-                // Location settings are not satisfied, but this can be fixed
-                // by showing the user a dialog.
-                try {
-                    // Show the dialog by calling startResolutionForResult(),
-                    // and check the result in onActivityResult().
-
-                    exception.startResolutionForResult(requireActivity(),
-                        REQUEST_CHECK_SETTINGS)
-                } catch (sendEx: IntentSender.SendIntentException) {
-                    // Ignore the error.
-                }
-            }
-        }*/
-
-    }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -488,14 +297,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
         Log.d("zzzzzonMyLocationClick",""+true)
         return true
     }
-
-    override fun onMyLocationClick(p0: Location) {
-        Log.d("zzzzzonMyLocationClick",""+p0)
-
-        Toast.makeText(requireContext(), "Current location:\n" + p0.longitude +" "+p0.latitude, Toast.LENGTH_LONG)
-            .show()
-    }
-
     override fun onMapReady(p0: GoogleMap) {
         mMap=p0
         if((ContextCompat.checkSelfPermission(
@@ -544,7 +345,6 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
 
             latitude=latLng.latitude
             longitude=latLng.longitude
-//            ConfirmationDialog(latLng.latitude, latLng.longitude)
         }
 
     }
