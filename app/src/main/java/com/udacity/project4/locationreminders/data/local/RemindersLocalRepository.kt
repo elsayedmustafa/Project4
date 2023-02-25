@@ -65,4 +65,12 @@ class RemindersLocalRepository(
             remindersDao.deleteAllReminders()
         }
     }
+
+    fun getReminderNotSuspended(id: String): Result<ReminderDTO>  {
+        var cc: Result<ReminderDTO>? =null
+        GlobalScope.launch {
+            cc= getReminder(id)
+        }
+        return cc!!
+    }
 }

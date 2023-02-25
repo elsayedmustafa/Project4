@@ -52,6 +52,8 @@ class SaveReminderFragment : BaseFragment() {
     lateinit var geofencingClient: GeofencingClient
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
+//        intent.action = ACTION_GEOFENCE_EVENT
+
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
         // addGeofences() and removeGeofences().
 
@@ -97,30 +99,18 @@ class SaveReminderFragment : BaseFragment() {
             val latitude = _viewModel.latitude.value
             val longitude = _viewModel.longitude.value
             val key = UUID.randomUUID().toString()
+
+//          2) save the reminder to the local db
+            _viewModel.validateAndSaveReminder(ReminderDataItem(title, description,location,latitude,longitude , key))
+
 //            TODO: use the user entered reminder details to:
 //             1) add a geofencing request
 
             AddingGeofence(key , latitude!!.toDouble(),longitude!!.toDouble() )
 
-            geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)?.run {
-                addOnSuccessListener {
-                    // Geofences added
-                    // ...
-                    Log.d("zaddOnSuccessListener->","Geofences added")
 
-                }
-                addOnFailureListener {
-                    // Failed to add geofences
-                    Log.d("zaddOnFailureListener->", it.toString())
-                    Log.d("zaddOnFailureListener->", it.stackTraceToString())
-                    Log.d("zaddOnFailureListener->", it.message!!)
-
-                }
-            }
-
-//             2) save the reminder to the local db
-            _viewModel.validateAndSaveReminder(ReminderDataItem(title, description,location,latitude,longitude , key))
         }
+
     }
 
 
@@ -185,7 +175,8 @@ class SaveReminderFragment : BaseFragment() {
         }
     }
     //Geofence
-    private fun AddingGeofence(key:String ,latitude:Double ,longitude:Double ){
+    @SuppressLint("MissingPermission")
+    private fun AddingGeofence(key:String, latitude:Double, longitude:Double ){
         Log.d("zzzzzzAddingGeofence","key->"+key+" latitude->"+latitude+" longitude->"+longitude)
         geofenceList.add(
             Geofence.Builder()
@@ -210,6 +201,25 @@ class SaveReminderFragment : BaseFragment() {
 
             // Create the geofence.
             .build())
+
+
+        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+            geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)?.run {
+                addOnSuccessListener {
+                    // Geofences added
+                    // ...
+                    Log.d("zaddOnSuccessListener->", "Geofences added")
+
+                }
+                addOnFailureListener {
+                    // Failed to add geofences
+                    Log.d("zaddOnFailureListener->", it.toString())
+                    Log.d("zaddOnFailureListener->", it.stackTraceToString())
+                    Log.d("zaddOnFailureListener->", it.message!!)
+
+                }
+            }
+        }
     }
     private fun getGeofencingRequest(): GeofencingRequest {
         return GeofencingRequest.Builder().apply {

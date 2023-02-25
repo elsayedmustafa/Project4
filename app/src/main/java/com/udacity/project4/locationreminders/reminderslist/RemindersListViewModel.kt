@@ -1,6 +1,7 @@
 package com.udacity.project4.locationreminders.reminderslist
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.project4.base.BaseViewModel
@@ -15,6 +16,7 @@ class RemindersListViewModel(
 ) : BaseViewModel(app) {
     // list that holds the reminder data to be displayed on the UI
     val remindersList = MutableLiveData<List<ReminderDataItem>>()
+    val reminderT = MutableLiveData<ReminderDTO>()
 
     /**
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
@@ -56,5 +58,33 @@ class RemindersListViewModel(
      */
     private fun invalidateShowNoData() {
         showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
+    }
+
+    fun getReminder(reminderKey: String)  {
+        Log.d("zzzzzzzzzzzzc", "getReminder")
+
+//        showLoading.value = true
+        viewModelScope.launch {
+            val result = dataSource.getReminder(
+                reminderKey
+            )
+//            showLoading.value = false
+
+//            showLoading.postValue(false)
+            when (result) {
+                is Result.Success<*> -> {
+                    reminderT.value = result.data as ReminderDTO
+                    Log.d("zzzzzzzzzzzzzzzccccc","getReminder")
+                }
+                is Result.Error -> {
+                    showSnackBar.value = result.message
+                    Log.d("zzzzzzzzzzzzc", "getReminder"+result.message)
+                }
+
+            }
+
+//            showToast.value = app.getString(R.string.reminder_saved)
+//            navigationCommand.value = NavigationCommand.Back
+        }
     }
 }
