@@ -45,20 +45,27 @@ class SaveReminderFragment : BaseFragment() {
 
     private val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE=12
     private val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE=1
+    private val ACTION_GEOFENCE_EVENT="ACTION_GEOFENCE_EVENT"
 
     val REQUEST_TURN_DEVICE_LOCATION_ON=1
+
 
     //Geofence
     lateinit var geofencingClient: GeofencingClient
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
-//        intent.action = ACTION_GEOFENCE_EVENT
+        intent.action = ACTION_GEOFENCE_EVENT
 
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
         // addGeofences() and removeGeofences().
 
         PendingIntent.getBroadcast(requireContext(), 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            /*PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE*/)
     }
 
     var geofenceList= ArrayList<Geofence>()

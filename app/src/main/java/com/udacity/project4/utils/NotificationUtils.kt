@@ -38,8 +38,14 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         .addParentStack(ReminderDescriptionActivity::class.java)
         .addNextIntent(intent)
     val notificationPendingIntent = stackBuilder
-        .getPendingIntent(getUniqueId(), PendingIntent.FLAG_UPDATE_CURRENT)
-
+        .getPendingIntent(getUniqueId(),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            /*PendingIntent.FLAG_UPDATE_CURRENT *//*or PendingIntent.FLAG_IMMUTABLE*/)
+//  or FLAG_IMMUTABLE
 //    build the notification object with the data to be shown
     val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.mipmap.ic_launcher)
