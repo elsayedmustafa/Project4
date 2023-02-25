@@ -167,7 +167,7 @@ class ReminderListFragmentTest : KoinTest {
     private lateinit var activity: FragmentActivity
     @Test
     fun GetReminderList_testGetError() {
-        val testMessage = "Test toast message"
+        val testMessage = "Error toast message"
         val toastLiveData = MutableLiveData<String>()
 
         // Create a TestNavHostController
