@@ -85,16 +85,29 @@ class SelectLocationFragment : BaseFragment(), GoogleMap.OnMyLocationButtonClick
 
 //                MapsClickListner()
 
-
 //                checkingGpsEnabled()
-
 
             }
             else -> {
                 // You can directly ask for the permission.
-                onRequestPermissionsResult()
+
                 // We don't rely on the result code, but just check the location setting again
 //                checkDeviceLocationSettingsAndStartGeofence(false)
+
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Permission Needed!, For get your location")
+                    .setMessage("Location Permission Needed!")
+                    .setPositiveButton(
+                        "OK"
+                    ) { dialog, which ->
+                        onRequestPermissionsResult()
+                    }
+                    .setNegativeButton(
+                        "CANCEL"
+                    ) { dialog, which ->
+                        // Permission is denied by the user
+                    }
+                    .create().show()
             }
         }
     }

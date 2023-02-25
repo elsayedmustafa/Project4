@@ -31,14 +31,29 @@ class WelcomeReminderAppFragment : BaseFragment() {
     //use Koin to retrieve the ViewModel instance
     override val _viewModel: WelcomeRemindersViewModel by viewModel()
     private lateinit var binding: FragmentWelcomeReminderAppBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
+            // already signed in
+            navigateToReminderList()
+        } else {
+            // not signed in
+            navigateToLoginReminder()
+
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         binding =
             DataBindingUtil.inflate(
-                inflater,
-                com.udacity.project4.R.layout.fragment_welcome_reminder_app, container, false
+                inflater,R.layout.fragment_welcome_reminder_app, container, false
             )
         binding.viewModel = _viewModel
 
@@ -47,6 +62,8 @@ class WelcomeReminderAppFragment : BaseFragment() {
         setTitle(getString(com.udacity.project4.R.string.app_name))
 
 //        binding.refreshLayout.setOnRefreshListener { _viewModel.loadReminders() }
+
+
 
         return binding.root
     }

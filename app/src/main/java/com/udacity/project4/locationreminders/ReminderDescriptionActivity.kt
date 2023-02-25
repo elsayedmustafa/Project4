@@ -17,6 +17,7 @@ class ReminderDescriptionActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_ReminderDataItem = "EXTRA_ReminderDataItem"
 
+        private lateinit var reminderDataItem:ReminderDataItem
         //        receive the reminder object after the user clicks on the notification
         fun newIntent(context: Context, reminderDataItem: ReminderDataItem): Intent {
             val intent = Intent(context, ReminderDescriptionActivity::class.java)
@@ -33,5 +34,14 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             R.layout.activity_reminder_description
         )
 //        TODO: Add the implementation of the reminder details
+// Make sure to use the same key as in MainActivity
+        reminderDataItem = intent?.let {
+            it.getSerializableExtra(EXTRA_ReminderDataItem/*,ReminderDataItem::class.java*/) as ReminderDataItem
+        }!!
+
+
+        binding.reminderDataItem = reminderDataItem
+
+
     }
 }

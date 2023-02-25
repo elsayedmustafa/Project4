@@ -9,13 +9,7 @@ import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
 import com.udacity.project4.R
 import com.udacity.project4.locationreminders.data.ReminderDataSource
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
-import com.udacity.project4.locationreminders.data.dto.Result
-import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.utils.sendNotification
-import kotlinx.coroutines.*
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 
 /**
@@ -28,12 +22,12 @@ import kotlin.coroutines.CoroutineContext
  *
  */
 
-class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope {
+class GeofenceBroadcastReceiver : BroadcastReceiver() /*, CoroutineScope */{
     private val TAG = "GeofenceBroadcastReceiv"
 
-    private var coroutineJob: Job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + coroutineJob
+//    private var coroutineJob: Job = Job()
+//    override val coroutineContext: CoroutineContext
+//        get() = Dispatchers.IO + coroutineJob
 
 
     @Inject
@@ -42,6 +36,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope {
     override fun onReceive(context: Context, intent: Intent) {
 
 //TODO: implement the onReceive method to receive the geofencing events at the background
+        Log.d("zzzzzzzonReceive","onReceive")
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent!!.hasError()) {
             val errorMessage = GeofenceStatusCodes
@@ -65,29 +60,29 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() , CoroutineScope {
 
 
 //        Interaction to the repository has to be through a coroutine scope
-            CoroutineScope(coroutineContext).launch(SupervisorJob()) {
-
-                triggeringGeofences!!.forEach {
-                //get the reminder with the request id
-                val result = remindersLocalRepository!!.getReminder(it.requestId)
-                if (result is Result.Success<ReminderDTO>) {
-                    val reminderDTO = result.data
-                    //send a notification to the user with the reminder details
-                    sendNotification(
-                        context, ReminderDataItem(
-                            reminderDTO.title,
-                            reminderDTO.description,
-                            reminderDTO.location,
-                            reminderDTO.latitude,
-                            reminderDTO.longitude,
-                            reminderDTO.id
-                        )
-                    )
-                    Log.i(TAG, reminderDTO.toString())
-
-                }
-                }
-            }
+//            CoroutineScope(coroutineContext).launch(SupervisorJob()) {
+//
+//                triggeringGeofences!!.forEach {
+//                //get the reminder with the request id
+//                val result = remindersLocalRepository!!.getReminder(it.requestId)
+//                if (result is Result.Success<ReminderDTO>) {
+//                    val reminderDTO = result.data
+//                    //send a notification to the user with the reminder details
+//                    sendNotification(
+//                        context, ReminderDataItem(
+//                            reminderDTO.title,
+//                            reminderDTO.description,
+//                            reminderDTO.location,
+//                            reminderDTO.latitude,
+//                            reminderDTO.longitude,
+//                            reminderDTO.id
+//                        )
+//                    )
+//                    Log.i(TAG, reminderDTO.toString())
+//
+//                }
+//                }
+//            }
 
             // Send notification and log the transition details.
 //            sendNotification(geofenceTransitionDetails)

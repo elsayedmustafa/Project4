@@ -2,13 +2,13 @@ package com.udacity.project4.locationreminders.savereminder
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -54,8 +54,9 @@ class SaveReminderFragment : BaseFragment() {
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
         // addGeofences() and removeGeofences().
-//        PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_MUTABLE)
+
+        PendingIntent.getBroadcast(requireContext(), 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
     }
 
     var geofenceList= ArrayList<Geofence>()
@@ -69,6 +70,10 @@ class SaveReminderFragment : BaseFragment() {
         setDisplayHomeAsUpEnabled(true)
 
         binding.viewModel = _viewModel
+
+        //Geofence
+        geofencingClient = LocationServices.getGeofencingClient(requireContext())
+
 
         return binding.root
     }
@@ -94,6 +99,7 @@ class SaveReminderFragment : BaseFragment() {
             val key = UUID.randomUUID().toString()
 //            TODO: use the user entered reminder details to:
 //             1) add a geofencing request
+
             AddingGeofence(key , latitude!!.toDouble(),longitude!!.toDouble() )
 
             geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)?.run {
@@ -101,10 +107,13 @@ class SaveReminderFragment : BaseFragment() {
                     // Geofences added
                     // ...
                     Log.d("zaddOnSuccessListener->","Geofences added")
+
                 }
                 addOnFailureListener {
                     // Failed to add geofences
-                    Log.d("zaddOnFailureListener->","Failed to add geofences")
+                    Log.d("zaddOnFailureListener->", it.toString())
+                    Log.d("zaddOnFailureListener->", it.stackTraceToString())
+                    Log.d("zaddOnFailureListener->", it.message!!)
 
                 }
             }
@@ -112,40 +121,37 @@ class SaveReminderFragment : BaseFragment() {
 //             2) save the reminder to the local db
             _viewModel.validateAndSaveReminder(ReminderDataItem(title, description,location,latitude,longitude , key))
         }
-
-        //Geofence
-        geofencingClient = LocationServices.getGeofencingClient(requireContext())
-
-
     }
 
 
-    @TargetApi(29)
+
     private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
         val foregroundLocationApproved = (
                 PackageManager.PERMISSION_GRANTED ==
                         ActivityCompat.checkSelfPermission(requireContext(),
                             Manifest.permission.ACCESS_FINE_LOCATION))
         val backgroundPermissionApproved =
-            if (runningQOrLater) {
-                PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(
-                            requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                        )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    PackageManager.PERMISSION_GRANTED ==
+                            ActivityCompat.checkSelfPermission(
+                                requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                            )
             } else {
                 true
             }
         return foregroundLocationApproved && backgroundPermissionApproved
     }
 
-    @TargetApi(29 )
+
     private fun requestForegroundAndBackgroundLocationPermissions() {
         if (foregroundAndBackgroundLocationPermissionApproved())
             return
         var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
         val resultCode = when {
             runningQOrLater -> {
-                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                }
                 REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
             }
             else ->{
@@ -153,18 +159,13 @@ class SaveReminderFragment : BaseFragment() {
             }
         }
         Log.d(TAG, "Request foreground only location permission + ->permissionsArraysize"+permissionsArray.size)
-//        ActivityCompat.requestPermissions(
-//            requireActivity(),
-//            permissionsArray,
-//            resultCode
-//        )
+
         locationPermissionRequest.launch(permissionsArray)
     }
 
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-//                 You can use the API that requires the Manifest.permission.
         when {
             (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -176,61 +177,16 @@ class SaveReminderFragment : BaseFragment() {
                     ) == PackageManager.PERMISSION_GRANTED) -> {
                         //TODO
                     checkDeviceLocationSettingsAndStartGeofence()
-
+                    Log.d("zzzzzzzzzzzzz","ACCESS_FINE_LOCATION AND ACCESS_BACKGROUND_LOCATION PERMISSION_GRANTED")
             }
             else -> {
-//                Snackbar.make(
-//                    binding.parentSaveReminder,
-//                    R.string.permission_denied_explanation,
-//                    Snackbar.LENGTH_INDEFINITE
-//                )
-//                    .setAction(R.string.settings) {
-//                        startActivity(Intent().apply {
-//                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//                            data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-//                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                        })
-//                    }.show()
 //                requestForegroundAndBackgroundLocationPermissions()
-
-
             }
         }
     }
-
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String>,
-//        grantResults: IntArray
-//    ) {
-//        Log.d(TAG, "onRequestPermissionResult")
-//
-//        if (
-//            grantResults.isEmpty() ||
-//            grantResults[LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
-//            (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
-//                    grantResults[BACKGROUND_LOCATION_PERMISSION_INDEX] ==
-//                    PackageManager.PERMISSION_DENIED))
-//        {
-//            Snackbar.make(
-//                binding.activityMapsMain,
-//                R.string.permission_denied_explanation,
-//                Snackbar.LENGTH_INDEFINITE
-//            )
-//                .setAction(R.string.settings) {
-//                    startActivity(Intent().apply {
-//                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//                        data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-//                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                    })
-//                }.show()
-//        } else {
-//            checkDeviceLocationSettingsAndStartGeofence()
-//        }
-//    }
-
     //Geofence
     private fun AddingGeofence(key:String ,latitude:Double ,longitude:Double ){
+        Log.d("zzzzzzAddingGeofence","key->"+key+" latitude->"+latitude+" longitude->"+longitude)
         geofenceList.add(
             Geofence.Builder()
             // Set the request ID of the geofence. This is a string to identify this
