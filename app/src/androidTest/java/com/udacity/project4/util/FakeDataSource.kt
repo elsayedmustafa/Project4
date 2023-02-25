@@ -27,6 +27,10 @@ object FakeDataSource  {
         return ReminderList.get(0)
 
     }
+    fun getNoReminder(): ReminderDTO? {
+        return null
+
+    }
 //
 //    fun getReminder_ByID(reminderId: String): ReminderDTO {
 //        return ReminderList.get(0)

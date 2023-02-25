@@ -17,7 +17,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.MockitoAnnotations
 import java.util.concurrent.Executors
 
 @ExperimentalCoroutinesApi
@@ -41,7 +40,7 @@ class RemindersLocalRepositoryTest {
 
     @Before
     fun initDb() {
-        MockitoAnnotations.initMocks(this)
+//        MockitoAnnotations.initMocks(this)
 
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
@@ -60,14 +59,14 @@ class RemindersLocalRepositoryTest {
     }
     @Test
     fun SaveReminders_GetAllReminder() = runBlocking {
-        // GIVEN - Save 15 movies.
+        // GIVEN - Save 15 Reminders.
         val remindersList = FakeDataSource.getReminders()
         remindersList.forEach {
             remindersDao.saveReminder(it)
         }
 
 
-        // WHEN - Get all saved movies.
+        // WHEN - Get all saved Reminders.
         var remindersListResult = repository.getReminders()
 
         var listResult:List<ReminderDTO> = emptyList()
@@ -80,7 +79,7 @@ class RemindersLocalRepositoryTest {
             }
         }
 
-        // THEN - Return all saved movies as they were.
+        // THEN - Return all saved Reminders as they were.
         MatcherAssert.assertThat(listResult.size, CoreMatchers.`is`(remindersList.size))
         MatcherAssert.assertThat(listResult, CoreMatchers.hasItem(reminderDTO))
     }
@@ -111,6 +110,32 @@ class RemindersLocalRepositoryTest {
         MatcherAssert.assertThat(reminderFromResult.title, CoreMatchers.`is`(reminder.title))
         MatcherAssert.assertThat(reminderFromResult.longitude, CoreMatchers.`is`(reminder.longitude))
         MatcherAssert.assertThat(reminderFromResult.latitude, CoreMatchers.`is`(reminder.latitude))
+    }
+
+
+    @Test
+    fun SaveReminders_GetError() = runBlocking {
+        // GIVEN
+        val reminder = FakeDataSource.getNoReminder()
+//            remindersDao.saveReminder(reminder!!)
+
+        // WHEN - Get saved Reminder.
+        var reminderResult = repository.getReminder("reminder.id")
+
+        var reminderFromResult=null //= ReminderDTO(null,null,null,null,null,"")
+        when(reminderResult){
+            is Result.Success<*> -> {
+//                reminderFromResult = (reminderResult.data as ReminderDTO)
+            }
+            is Result.Error ->{
+                reminderFromResult = null
+
+            }
+        }
+
+        // THEN - Return null .
+        MatcherAssert.assertThat(reminderFromResult, CoreMatchers.nullValue())
+
     }
 
 }

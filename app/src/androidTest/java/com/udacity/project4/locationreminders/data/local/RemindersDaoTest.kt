@@ -70,33 +70,33 @@ class RemindersDaoTest {
 
     @Test
     fun saveReminder_getReminders() = runBlocking {
-        // GIVEN - Save 15 movies.
+        // GIVEN - Save Reminders.
         val remindersList = FakeDataSource.getReminders()
         remindersList.forEach {
             remindersDao.saveReminder(it)
         }
 
-        // WHEN - Get all saved movies.
+        // WHEN - Get all saved Reminders.
         val result = remindersDao.getReminders() //.getOrAwaitValue()
 
-        // THEN - Return all saved movies as they were.
+        // THEN - Return all saved Reminders as they were.
         assertThat(result.size, `is`(remindersList.size))
         assertThat(result, CoreMatchers.hasItem(reminderDTO))
     }
 
     @Test
     fun saveReminder_DeleteAllReminders() = runBlocking {
-        // GIVEN - Save 15 movies.
+        // GIVEN - Save  Reminders.
         val remindersList = FakeDataSource.getReminders()
         remindersList.forEach {
             remindersDao.saveReminder(it)
         }
 
-        // WHEN - Get all saved movies.
+        // WHEN - Get all saved Reminders.
         remindersDao.deleteAllReminders()
         val result = remindersDao.getReminders() //.getOrAwaitValue()
 
-        // THEN - Return all saved movies as they were.
+        // THEN - Return all saved Reminders as they were.
         assertThat(result.size, `is`(0))
     }
 }
