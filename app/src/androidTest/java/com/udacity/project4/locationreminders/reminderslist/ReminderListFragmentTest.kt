@@ -2,8 +2,10 @@ package com.udacity.project4.locationreminders.reminderslist
 
 import android.app.Application
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +13,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -26,6 +30,7 @@ import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorFragment
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.hamcrest.CoreMatchers
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -38,6 +43,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
+
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
@@ -56,6 +62,8 @@ class ReminderListFragmentTest : KoinTest {
 
     private val dataBindingIdlingResource = DataBindingIdlingResource()
 
+//    @get:Rule
+//    var instantExecutorRule = ActivityTestRule(RemindersActivityTest::class.java as Activity)
     /**
      * As we use Koin as a Service Locator library to develop the app, we'll also
      * use Koin to test the code. At this step we will initialize Koin related
@@ -125,35 +133,6 @@ class ReminderListFragmentTest : KoinTest {
             unregister(dataBindingIdlingResource)
         }
     }
-//    import androidx.test.core.app.ActivityScenario
-//    val scenario = ActivityScenario.launch(MainActivity::class.java)
-//    dataBindingIdlingResource.monitorActivity(scenario)
-
-
-    /*@Test
-    fun clickTask_navigateToDetailFragmentOne() = runBlockingTest {
-//        repository.saveTask(Task("TITLE1", "DESCRIPTION1", false, "id1"))
-//        repository.saveTask(Task("TITLE2", "DESCRIPTION2", true, "id2"))
-
-        // GIVEN - On the home screen
-        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
-
-        val navController = mock(NavController::class.java)
-
-        scenario.onFragment {
-            Navigation.setViewNavController(it.view!!, navController)
-        }
-        // WHEN - Click on the first list item
-        onView(withId(R.id.reminderssRecyclerView))
-            .perform(
-                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                hasDescendant(withText("TITLE1")), click()))
-
-        // THEN - Verify that we navigate to the first detail screen
-        verify(navController).navigate(
-            TasksFragmentDirections.actionTasksFragmentToTaskDetailFragment( "id1")
-        )
-    }*/
 
     @Test
     fun testNavigationToReminderListScreen_ScrollTotestItem() {
@@ -167,8 +146,6 @@ class ReminderListFragmentTest : KoinTest {
         dataBindingIdlingResource.monitorFragment(titleScenario as FragmentScenario<Fragment>)
 
         titleScenario.onFragment { fragment ->
-
-//            dataBindingIdlingResource.monitorFragment(fragment)
 
             // Set the graph on the TestNavHostController
             navController.setGraph(R.navigation.nav_graph)
@@ -187,9 +164,12 @@ class ReminderListFragmentTest : KoinTest {
         )
     }
 
-
+    private lateinit var activity: FragmentActivity
     @Test
     fun GetReminderList_testGetError() {
+        val testMessage = "Test toast message"
+        val toastLiveData = MutableLiveData<String>()
+
         // Create a TestNavHostController
         val navController = TestNavHostController(
             ApplicationProvider.getApplicationContext())
@@ -197,8 +177,8 @@ class ReminderListFragmentTest : KoinTest {
         // Create a graphical FragmentScenario for the TitleScreen
         val titleScenario = launchFragmentInContainer<ReminderListFragment>( null, R.style.AppTheme)
 
-        dataBindingIdlingResource.monitorFragment(titleScenario as FragmentScenario<Fragment>)
 
+//        var activity: FragmentActivity? =null
         titleScenario.onFragment { fragment ->
 
 //            dataBindingIdlingResource.monitorFragment(fragment)
@@ -208,11 +188,24 @@ class ReminderListFragmentTest : KoinTest {
 
             // Make the NavController available via the findNavController() APIs
             Navigation.setViewNavController(fragment.requireView(), navController)
+
+            fragment._viewModel.showErrorMessage.postValue(testMessage)
+            fragment._viewModel.showErrorMessage.observe(fragment.viewLifecycleOwner, {
+                toastLiveData.value = it
+            })
+
+            dataBindingIdlingResource.monitorFragment(titleScenario as FragmentScenario<Fragment>)
+            activity = fragment.requireActivity()
+
+
         }
 
-        viewModelz.showErrorMessage.postValue("TTTTTTT")
+        // Set the LiveData value to trigger the toast message
+        toastLiveData.postValue(testMessage)
 
-
-
+        // Wait for the toast message to appear
+        Espresso.onView(withText(testMessage)).inRoot(
+            RootMatchers.withDecorView(CoreMatchers.not(CoreMatchers.`is`(activity.window.decorView)))
+        ).check(ViewAssertions.matches(isDisplayed()))
     }
 }
