@@ -114,23 +114,25 @@ class RemindersLocalRepositoryTest {
     @Test
     fun SaveReminders_GetError() = runBlocking {
         // GIVEN
-        val reminder = FakeDataSource.getNoReminder()
+//        val reminder = FakeDataSource.getNoReminder()
 
         // WHEN - Get saved Reminder.
         var reminderResult = repository.getReminder("reminder.id")
 
         var reminderFromResult=null
+        var messageResult=""
         when(reminderResult){
             is Result.Success<*> -> {
             }
             is Result.Error ->{
-                reminderFromResult = null
+                messageResult = reminderResult.message.toString()
 
             }
         }
 
         // THEN - Return null .
         MatcherAssert.assertThat(reminderFromResult, CoreMatchers.nullValue())
+        MatcherAssert.assertThat(messageResult, CoreMatchers.`is`("Reminder not found!"))
 
     }
 

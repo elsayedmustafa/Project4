@@ -4,13 +4,19 @@ import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 
-class FakeReminderssRepository(private val reminderDTOList: List<ReminderDTO>) : ReminderDataSource {
+class FakeReminderssRepository(private val reminderDTOList: ArrayList<ReminderDTO>) : ReminderDataSource {
+    private var shouldReturnError = false
+
+    fun setReturnError(value: Boolean) {
+        shouldReturnError = value
+    }
+
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
         return Result.Success(reminderDTOList)
     }
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
-        TODO("Not yet implemented")
+        reminderDTOList.add(reminder)
     }
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
@@ -18,8 +24,8 @@ class FakeReminderssRepository(private val reminderDTOList: List<ReminderDTO>) :
             reminderDTOList.filter {
                 it.id.contains(id, ignoreCase = true)
             }
-        if (searchResults.size>0)
-        return Result.Success(searchResults.get(0))
+        if (shouldReturnError)
+            return Result.Success(searchResults.get(0))
         else
             return Result.Error("Not Found")
 
