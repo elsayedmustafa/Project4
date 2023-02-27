@@ -125,6 +125,7 @@ class RemindersListViewModelTest : KoinTest{
             is Result.Success<*> -> {
             }
             is Result.Error ->{
+                reminderFromResult=null
                 messageResult = reminderResult.message.toString()
 
             }
@@ -132,7 +133,7 @@ class RemindersListViewModelTest : KoinTest{
 
         // THEN - Return null .
         MatcherAssert.assertThat(reminderFromResult, CoreMatchers.nullValue())
-        MatcherAssert.assertThat(messageResult, CoreMatchers.`is`("Reminder not found!"))
+        MatcherAssert.assertThat(messageResult, CoreMatchers.`is`("Unable to get retrieved!"))
 
     }
 

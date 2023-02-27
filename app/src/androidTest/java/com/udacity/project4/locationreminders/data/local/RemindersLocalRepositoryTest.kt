@@ -132,7 +132,7 @@ class RemindersLocalRepositoryTest {
 
         // THEN - Return null .
         MatcherAssert.assertThat(reminderFromResult, CoreMatchers.nullValue())
-        MatcherAssert.assertThat(messageResult, CoreMatchers.`is`("Reminder not found!"))
+        MatcherAssert.assertThat(messageResult, CoreMatchers.`is`("Unable to get retrieved!"))
 
     }
 

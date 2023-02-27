@@ -50,7 +50,7 @@ class RemindersLocalRepository(
             if (reminder != null) {
                 return@withContext Result.Success(reminder)
             } else {
-                return@withContext Result.Error("Reminder not found!")
+                return@withContext Result.Error("Unable to get retrieved!")
             }
         } catch (e: Exception) {
             return@withContext Result.Error(e.localizedMessage)

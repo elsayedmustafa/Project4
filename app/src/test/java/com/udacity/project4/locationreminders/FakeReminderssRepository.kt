@@ -15,7 +15,7 @@ class FakeReminderssRepository(private val reminderDTOList: List<ReminderDTO>) :
         if (!shouldReturnError)
             return Result.Success(reminderDTOList)
         else
-            return Result.Error("Reminder not found!")
+            return Result.Error("Unable to get retrieved!")
     }
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
@@ -27,10 +27,10 @@ class FakeReminderssRepository(private val reminderDTOList: List<ReminderDTO>) :
             reminderDTOList.filter {
                 it.id.contains(id, ignoreCase = true)
             }
-        if (shouldReturnError)
+        if (!shouldReturnError)
             return Result.Success(searchResults.get(0))
         else
-            return Result.Error("Reminder not found!")
+            return Result.Error("Unable to get retrieved!")
 
     }
 
