@@ -8,9 +8,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.FakeDataSource
 import com.udacity.project4.locationreminders.FakeReminderssRepository
 import com.udacity.project4.locationreminders.data.ReminderDataSource
+import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import com.udacity.project4.locationreminders.utils.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.pauseDispatcher
 import kotlinx.coroutines.test.resumeDispatcher
 import kotlinx.coroutines.test.runBlockingTest
@@ -108,5 +110,30 @@ class RemindersListViewModelTest : KoinTest{
 
     }
 
+    @Test
+    fun SaveReminders_GetAllReminderWithError() = runBlocking {
+        // GIVEN
+        reminderssRepository.setReturnError(true)
+
+        // WHEN - Get saved Reminder.
+
+        var reminderResult = reminderssRepository.getReminders()
+
+        var reminderFromResult=null
+        var messageResult=""
+        when(reminderResult){
+            is Result.Success<*> -> {
+            }
+            is Result.Error ->{
+                messageResult = reminderResult.message.toString()
+
+            }
+        }
+
+        // THEN - Return null .
+        MatcherAssert.assertThat(reminderFromResult, CoreMatchers.nullValue())
+        MatcherAssert.assertThat(messageResult, CoreMatchers.`is`("Reminder not found!"))
+
+    }
 
 }
