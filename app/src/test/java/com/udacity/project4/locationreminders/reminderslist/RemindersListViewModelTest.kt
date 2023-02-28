@@ -5,7 +5,6 @@ package com.udacity.project4.locationreminders.reminderslist
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.udacity.project4.locationreminders.FakeDataSource
 import com.udacity.project4.locationreminders.FakeReminderssRepository
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.Result
@@ -63,8 +62,6 @@ class RemindersListViewModelTest : KoinTest{
             }
             single<ReminderDataSource> {
                 FakeReminderssRepository(
-                    // GIVEN - Reminder repository.
-                    FakeDataSource.ReminderList
                 )
             }
         }
