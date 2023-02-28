@@ -21,17 +21,34 @@ var ReminderList = listOf(
     ReminderDTO("Title 9","description 9", "location9", 2016.0,2553.0,UUID.randomUUID().toString()),
     ReminderDTO("Title 10","description 10", "location10", 20180.0,5545.0,UUID.randomUUID().toString()))
 
+    private var shouldReturnError = false
+
+    fun setReturnError(value: Boolean) {
+        shouldReturnError = value
+    }
+
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
+        if (!shouldReturnError)
             return Result.Success(ReminderList)
+        else
+            return Result.Error("Unable to get retrieved!")
     }
 
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
-        TODO("save the reminder")
+        ReminderList + reminder
     }
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
-        TODO("return the reminder with the id")
+        val searchResults =
+            ReminderList.filter {
+                it.id.contains(id, ignoreCase = true)
+            }
+        if (!shouldReturnError)
+            return Result.Success(searchResults.get(0))
+        else
+            return Result.Error("Unable to get retrieved!")
+
     }
 
     override suspend fun deleteAllReminders() {
